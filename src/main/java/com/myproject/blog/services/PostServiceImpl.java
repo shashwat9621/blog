@@ -14,6 +14,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.awt.print.Pageable;
@@ -62,8 +63,16 @@ public class PostServiceImpl implements PostService{
     }
 
     @Override
-    public PostResponse getAllPost(Integer pageNumber, Integer pageSize) {
-        PageRequest p = PageRequest.of(pageNumber,pageSize);
+    public PostResponse getAllPost(Integer pageNumber, Integer pageSize,String sortBy, String sortDir) {
+        Sort sort = null;
+        if(sortDir.equalsIgnoreCase("asc"))
+        {
+            sort=Sort.by(sortBy).ascending();
+        }
+        else {
+            sort=Sort.by(sortBy).descending();
+        }
+        PageRequest p = PageRequest.of(pageNumber,pageSize,sort);
         Page<Post> pagePost = this.postRepo.findAll(p);
         List<Post> posts = pagePost.getContent();
         List<PostDto> postDtos =posts.stream().map(post->this.postToDto(post)).collect(Collectors.toList());
@@ -102,6 +111,7 @@ public class PostServiceImpl implements PostService{
 
     @Override
     public List<PostDto> searchPosts(String keyword) {
+
         return null;
     }
     private Post dtoToPost(PostDto postDto)
