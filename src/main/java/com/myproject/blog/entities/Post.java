@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -25,5 +27,8 @@ public class Post {
     private Category category;
     @ManyToOne
     private User user;
+
+    @OneToMany
+    private Set<Comment> comments =new HashSet<>();
 
 }
